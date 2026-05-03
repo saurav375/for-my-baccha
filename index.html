@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Cutiepie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink-accent: #ff85a1;
+            --blue-accent: #74b9ff;
+            --text-main: #2d3436;
+        }
+
+        * { box-sizing: border-box; transition: opacity 0.4s ease, transform 0.4s ease; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #a1c4fd 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Floating Background Elements */
+        .bg-elements { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .heart-float { position: absolute; color: white; opacity: 0.5; animation: float Up 6s infinite linear; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main Glass Card */
+        .glass-card {
+            position: relative;
+            z-index: 10;
+            width: 92%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 35px 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .section { display: none; }
+        .active { display: block; animation: fadeIn 0.6s forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-family: 'Dancing Script', cursive; color: #d63031; font-size: 2.5rem; margin: 15px 0; }
+        p { color: #636e72; font-size: 0.95rem; }
+
+        .btn-action {
+            background: linear-gradient(45deg, var(--pink-accent), var(--blue-accent));
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 133, 161, 0.3);
+            margin-top: 20px;
+            width: 80%;
+        }
+
+        /* Loading System */
+        .progress-container { width: 100%; height: 10px; background: #f0f0f0; border-radius: 20px; margin: 25px 0; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--pink-accent); box-shadow: 0 0 10px var(--pink-accent); }
+
+        /* Notes UI */
+        .note-item {
+            background: white;
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .note-item.opened { border-color: var(--pink-accent); background: #fff9fa; }
+        .hidden-msg { display: none; padding-top: 10px; color: #b2bec3; font-style: italic; font-size: 0.9rem; }
+
+        .big-pink-heart { font-size: 4rem; animation: pulse 1.5s infinite; display: inline-block; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        #final-box { background: #fff; padding: 20px; border-radius: 20px; border: 2px dashed var(--pink-accent); margin-top: 20px; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-elements" id="bgElements"></div>
+
+    <div class="glass-card">
+        <!-- STEP 1 -->
+        <div id="step1" class="section active">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpndW5yYXo1dmh3YnI1eXh3eXh3eXh3eXh3eXh3eXh3eXh3ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/L40pC6Nks8d4d/giphy.gif" width="130">
+            <h1>Hey Anushree cutiepie</h1>
+            <p>Do you even know how cute you are?</p>
+            <button class="btn-action" onclick="startExperience()">Check</button>
+        </div>
+
+        <!-- STEP 2: LOADING -->
+        <div id="step2" class="section">
+            <p>Measuring your cuteness... ⏳</p>
+            <div id="loader-num" style="font-size: 3rem; font-weight: bold; color: var(--pink-accent);">0%</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="p-bar"></div>
+            </div>
+            <div id="warning-box" style="display:none">
+                <h3 style="color: #ff4d4d;">Warning: Too cute to handle!</h3>
+                <button class="btn-action" onclick="showStep(3)">Continue</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: NOTES -->
+        <div id="step3" class="section">
+            <div class="big-pink-heart">💖</div>
+            <p><b>Tap each one to reveal</b></p>
+            <div class="note-item" onclick="revealNote(this, 1)">click Cutieee ❤️ <div class="hidden-msg">I messed up... and i'm really sorry for that...</div></div>
+            <div class="note-item" onclick="revealNote(this, 2)">click Cutieee ❤️ <div class="hidden-msg">I promise i won't leave you</div></div>
+            <div class="note-item" onclick="revealNote(this, 3)">click Cutieee ❤️ <div class="hidden-msg">Please forgive me.... you are very valuable to me</div></div>
+            <button id="see-more-btn" class="btn-action" style="display:none" onclick="showStep(4)">See More</button>
+        </div>
+
+        <!-- STEP 4: FINAL -->
+        <div id="step4" class="section">
+            <p>A little note for you...</p>
+            <div style="font-size: 3.5rem; margin: 15px 0;">✉️</div>
+            <button class="btn-action" style="width: 70px; height: 70px; border-radius: 50%; padding: 0;" onclick="revealLetter()">💖🌻</button>
+            
+            <div id="final-letter" style="display:none">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmN2bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3bmZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/MDJ9uH6S1Zsc/giphy.gif" width="100" style="display:block; margin: 20px auto 0;">
+                <div id="final-box">
+                    <p>I'm really sorry, my love. I upset the most precious and adorable person in my life — You 🤗</p>
+                    <p>Please forgive me my <b>PUCHUu😘💖</b> I won't leave you in this life or any other life. I promise.</p>
+                    <h2 style="color: var(--pink-accent); text-align: center;">I Love You</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Audio -->
+    <div id="music-player"></div>
+
+    <script>
+        // Background Animation
+        const bg = document.getElementById('bgElements');
+        for(let i=0; i<15; i++) {
+            let h = document.createElement('div');
+            h.className = 'heart-float';
+            h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDelay = Math.random() * 5 + 's';
+            h.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            bg.appendChild(h);
+        }
+
+        function startExperience() {
+            // Music Trigger
+            document.getElementById('music-player').innerHTML = `<iframe width="0" height="0" src="https://www.youtube.com/embed/0n18ON2FoEY?autoplay=1&loop=1" frameborder="0" allow="autoplay"></iframe>`;
+            
+            showStep(2);
+
+            let percent = 0;
+            const num = document.getElementById('loader-num');
+            const bar = document.getElementById('p-bar');
+            
+            const countUp = setInterval(() => {
+                percent += 20;
+                num.innerText = percent + "%";
+                bar.style.width = (percent/10) + "%";
+                
+                if(percent >= 1000) {
+                    clearInterval(countUp);
+                    document.getElementById('warning-box').style.display = 'block';
+                }
+            }, 35); // Approx 1.7 seconds total
+        }
+
+        function showStep(stepNum) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + stepNum).classList.add('active');
+        }
+
+        let countNotes = 0;
+        function revealNote(el, id) {
+            if(!el.classList.contains('opened')) {
+                el.classList.add('opened');
+                el.querySelector('.hidden-msg').style.display = 'block';
+                countNotes++;
+                if(countNotes === 3) {
+                    document.getElementById('see-more-btn').style.display = 'inline-block';
+                }
+            }
+        }
+
+        function revealLetter() {
+            document.getElementById('final-letter').style.display = 'block';
+            document.getElementById('final-letter').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
